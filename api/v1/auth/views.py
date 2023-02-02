@@ -1,13 +1,17 @@
+from django.contrib.auth import login
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from api.v1.auth.serializer import Userserializer
 from api.models import User
 
+
 class AuthView(GenericAPIView):
     serializer_class = Userserializer
 
     def post(self, request, *args, **kwargs):
+
+        global user
         data = request.data
         method = data.get('method')
         params = data.get('params')
@@ -37,20 +41,33 @@ class AuthView(GenericAPIView):
             user.set_password(params["password"])
             user.save()
 
-            token = Token()
-            token.user = user
-            token.save()
+            # token = Token()
+            # token.user = user
+            # token.save()
+
+            return Response({
+                "result": {
+                    "name": user.name,
+                    "mobile": user.mobile,
+                    "email": user.email
+                }
+            })
 
         elif method == "login":
-            nott = 'mobile' if "mobile" not in params else "password" if "password" not in params else None
-            if nott:
-                return Response({
-                    "Error": f"{nott} polyasi to'ldirilmagan"
+            nottt = "email" if "email" not in params else "password" if "password" not in params else None
+            nott = 'mobile' if 'mobile' not in params else "password" if "password" not in params else None
 
+            if nott and nottt:
+                return Response({
+                    "Error": f"{nott} kiritilishi shart"
                 })
 
+            email = params.get("email")
             mobile = params.get("mobile")
-            user = User.objects.filter(mobile=mobile).first()
+            if mobile:
+                user = User.objects.filter(mobile=mobile).first()
+            if email:
+                user = User.objects.filter(email=email).first()
 
             if not user:
                 return Response({
@@ -66,6 +83,20 @@ class AuthView(GenericAPIView):
                 token = Token()
                 token.user = user
                 token.save()
+            # login(request, user)
+            return Response({
+                "result": {
+                    "token": token.key,
+                    "name": user.name,
+                    "mobile": user.mobile,
+                    "email": user.email,
+
+                }
+            })
+        else:
+            return Response({
+                "Error": "Bunday method yoq"
+            })
 
         # elif method == "step.one":
         #     nott = 'mobile' if "mobile" not in params else "lang" if "lang" not in params else None
@@ -154,17 +185,3 @@ class AuthView(GenericAPIView):
         #         return Response({
         #             "is_registered": False
         #         })
-        #
-
-        else:
-            return Response({
-                "Error": "Bunday method yoq"
-            })
-
-        return Response({
-            "result": {
-                "token": token.key,
-                "mobile": user.mobile,
-                "name": user.name,
-            }
-        })
