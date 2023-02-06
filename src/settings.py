@@ -9,9 +9,11 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-import os
+import os.path
 from pathlib import Path
-
+from corsheaders.conf import *
+import dj_database_url
+import pytz
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +27,7 @@ SECRET_KEY = 'django-insecure-z*a36a*xy6)27@!sa+hvjoss8wz&)ll200@ztpvr)1a6q+&#j$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -60,6 +62,10 @@ ROOT_URLCONF = 'src.urls'
 
 AUTH_USER_MODEL = "api.User"
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -81,14 +87,26 @@ WSGI_APPLICATION = 'src.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-#
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.' + os.getenv('DB_ENGINE', "postgresql_psycopg2"),
+        'NAME': os.getenv('DB_NAME', "des36tevjusov7"),
+        'USER': os.getenv('DB_USER', "kukvdiyuiegaqp"),
+        'PASSWORD': os.getenv('PASS', "88ffc3f5f20148df03e8af8c8b02b916d94dd3c8899541463d646375aa68bc2d"),
+        'HOST': os.getenv('DB_HOST', "ec2-50-19-255-190.compute-1.amazonaws.com"),
+        'PORT': os.getenv('DB_HOST', "5432"),
+    }
+}
+db_from_env = dj_database_url.config(conn_max_age=600)
 
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
