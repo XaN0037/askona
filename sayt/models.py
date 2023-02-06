@@ -82,7 +82,7 @@ class TkanImg(models.Model):
 
 class ColorImg(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    tkan = models.ForeignKey(Product, on_delete=models.CASCADE)
+
     color = models.CharField(Tkan, max_length=128)
     img = models.ImageField()
 

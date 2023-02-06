@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os.path
 from pathlib import Path
-from corsheaders.conf import *
+
+import dj_database_url
+# from corsheaders.conf import *
 import dj_database_url
 import pytz
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,15 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework.authtoken',
-    "corsheaders",
-    'api',
-    'sayt',
+    "rest_framework.authtoken",
+    # "corsheaders",
+    "api",
+    "sayt"
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
