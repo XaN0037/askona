@@ -97,10 +97,10 @@ WSGI_APPLICATION = 'src.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.' + os.getenv('DB_ENGINE', "postgresql_psycopg2"),
-        'NAME': os.getenv('DB_NAME', "des36tevjusov7"),
-        'USER': os.getenv('DB_USER', "kukvdiyuiegaqp"),
-        'PASSWORD': os.getenv('PASS', "88ffc3f5f20148df03e8af8c8b02b916d94dd3c8899541463d646375aa68bc2d"),
-        'HOST': os.getenv('DB_HOST', "ec2-50-19-255-190.compute-1.amazonaws.com"),
+        'NAME': os.getenv('DB_NAME', "d1l0rd9av1cnqq"),
+        'USER': os.getenv('DB_USER', "sjoqereawuhjfa"),
+        'PASSWORD': os.getenv('PASS', "dc1053dd8065938ca60cff6d7d8c719cf9a4a5113fa97297c6768fc384a7bb14"),
+        'HOST': os.getenv('DB_HOST', "ec2-3-224-125-117.compute-1.amazonaws.com"),
         'PORT': os.getenv('DB_HOST', "5432"),
     }
 }
