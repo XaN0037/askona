@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os.path
 from pathlib import Path
 
-import dj_database_url
+
 # from corsheaders.conf import *
 import dj_database_url
 import pytz
