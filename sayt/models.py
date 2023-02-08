@@ -84,7 +84,6 @@ class TkanImg(models.Model):
 
 class ColorImg(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-
     color = models.CharField( max_length=128)
     img = models.ImageField()
 
@@ -92,20 +91,12 @@ class ColorImg(models.Model):
         return f"{self.color}"
 
 
-
 #  o'zgartirilgan joy
-
-
 
 class Basket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
     summa = models.IntegerField(blank=True, default=0)
-    # serializer exclude ichida turadi, items ichiga tiqmisila
     updated_dt = models.DateTimeField(auto_now_add=False, auto_now=True)
     create_dt = models.DateTimeField(auto_now_add=True, auto_now=False, editable=False)
-
-    def save(self, *args, **kwargs):
-        self.summa = self.product.price * self.quantity
-        return super(Basket, self).save(*args, **kwargs)
