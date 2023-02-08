@@ -1,3 +1,6 @@
+import json
+
+import requests
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -25,11 +28,16 @@ class AuthView(GenericAPIView):
 
         if method == "regis":
             mobile = params.get("mobile")
+            email = params.get("email")
             user = User.objects.filter(mobile=mobile).first()
-
+            email = User.objects.filter(email=email).first()
             if user:
                 return Response({
                     "Error": "Bu tel nomer allaqachon bor"
+                })
+            elif email:
+                return Response({
+                    "Error": "Bu email allaqachon bor"
                 })
 
             serializer = self.get_serializer(data=params)
@@ -52,6 +60,7 @@ class AuthView(GenericAPIView):
 
             mobile = params.get("mobile")
             user = User.objects.filter(mobile=mobile).first()
+
 
             if not user:
                 return Response({
