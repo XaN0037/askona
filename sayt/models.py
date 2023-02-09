@@ -50,11 +50,12 @@ class Product(Character):
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=128)
     sale = models.DateTimeField()
-    price = models.IntegerField()
+    price = models.IntegerField(default=0)
     price_true = models.IntegerField(null=True, blank=True)
     credit = models.IntegerField()
     bonus = models.IntegerField()
     size = models.CharField(max_length=122)
+
     def __str__(self):
         return f"{self.name}"
 
@@ -84,7 +85,8 @@ class TkanImg(models.Model):
 
 class ColorImg(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    color = models.CharField( max_length=128)
+
+    color = models.CharField(max_length=128)
     img = models.ImageField()
 
     def __str__(self):
@@ -93,10 +95,16 @@ class ColorImg(models.Model):
 
 #  o'zgartirilgan joy
 
+
 class Basket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
     summa = models.IntegerField(blank=True, default=0)
+    # serializer exclude ichida turadi, items ichiga tiqmisila
     updated_dt = models.DateTimeField(auto_now_add=False, auto_now=True)
     create_dt = models.DateTimeField(auto_now_add=True, auto_now=False, editable=False)
+
+    def save(self, *args, **kwargs):
+        self.summa = self.product.price * self.quantity
+        return super(Basket, self).save(*args, **kwargs)

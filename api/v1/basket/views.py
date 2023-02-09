@@ -43,3 +43,30 @@ class BasketView(GenericAPIView):
         root.save()
 
         return Response({'success': basket_format(root)})
+
+    def put(self, request, *args, **kwargs):
+
+        bron_id = request.data['bron_id']
+        quantity = request.data['quantity']
+        if not bron_id:
+            return Response({
+                "Error": "product_id kiritilmagan"
+            })
+        bron = Basket.objects.filter(pk=bron_id, user=request.user).first()
+
+        if not bron:
+            return Response({
+                "Error": "bunaqa idli bron savatda mavjut emas"
+            })
+
+        if not quantity:
+            return Response({
+                "Error": "quantity kiritilmagan"
+            })
+
+        bron.quantity = quantity
+        # root.summa = quantity *
+        bron.save()
+        return Response({
+            "data": basket_format(bron)
+        })
