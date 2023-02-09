@@ -50,7 +50,7 @@ class BasketView(GenericAPIView):
         quantity = request.data['quantity']
         if not bron_id:
             return Response({
-                "Error": "product_id kiritilmagan"
+                "Error": "bron_id kiritilmagan"
             })
         bron = Basket.objects.filter(pk=bron_id, user=request.user).first()
 
@@ -65,8 +65,50 @@ class BasketView(GenericAPIView):
             })
 
         bron.quantity = quantity
-        # root.summa = quantity *
         bron.save()
         return Response({
             "data": basket_format(bron)
         })
+
+    def delete(self, request, *args, **kwargs):
+
+        bron_id = request.data['bron_id']
+        user = request.user
+        if not bron_id:
+            return Response({
+                "Error": "bron_id kiritilmagan"
+            })
+        basket = Basket.objects.filter(pk=bron_id).first()
+        if not basket:
+            return Response({
+                "Error": " bu id da bron topilmadi"
+            })
+
+        if basket:
+            basket.delete()
+            return Response({
+                "Success": "Bron qilingan tarif o'chirib tashlandi"
+            })
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if not user:
+            return Response({
+                "Error": "bunaqa user mavjud emas "
+            })
+        user_basket = Basket.objects.filter(user_id=request.user.id).first()
+        if not user_basket:
+            return Response({
+                "Error": " bu user maxsulot bron qilmagan"
+            })
+        else:
+            result = []
+            for i in Basket.objects.all().filter(user_id=request.user.id):
+                result.append(basket_format(i))
+
+        return Response(result)
+
+
+
+
+
