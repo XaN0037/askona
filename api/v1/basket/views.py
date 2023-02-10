@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from api.v1.auth.servise import BearerAuth
 from api.v1.basket.serializer import Basketserializer
 from base.formats import basket_format
-from sayt.models import Product, Basket
+from sayt.models import Product, Basket, ProductImg
 
 
 class BasketView(GenericAPIView):
@@ -29,6 +29,7 @@ class BasketView(GenericAPIView):
             })
 
         basket = Basket.objects.filter(user_id=user.id).filter(product_id=product_id).first()
+        # img = ProductImg.objects.filter(product_id=product_id)
         if basket:
             basket.quantity += 1
             basket.summa = basket.quantity * product.price
@@ -38,6 +39,7 @@ class BasketView(GenericAPIView):
 
         root = Basket()
         root.user = user
+        # root.img= img.img
         root.product = product
         root.summa = product.price
         root.save()
@@ -78,7 +80,7 @@ class BasketView(GenericAPIView):
             return Response({
                 "Error": "bron_id kiritilmagan"
             })
-        basket = Basket.objects.filter(pk=bron_id).first()
+        basket = Basket.objects.filter(pk=bron_id, user_id=request.user.id).first()
         if not basket:
             return Response({
                 "Error": " bu id da bron topilmadi"
@@ -107,8 +109,3 @@ class BasketView(GenericAPIView):
                 result.append(basket_format(i))
 
         return Response(result)
-
-
-
-
-

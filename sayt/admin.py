@@ -2,6 +2,8 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
+
+from api.models import ServerTokens
 from .models import *
 
 
@@ -32,3 +34,7 @@ admin.site.register(Category)
 admin.site.register(Subcategory)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Tkan, TkanAdmin)
+admin.site.register(Comment)
+admin.site.register(Like)
+admin.site.register(ServerTokens)
+admin.site.register(Prosaved)
