@@ -39,7 +39,6 @@ class BasketView(GenericAPIView):
 
         root = Basket()
         root.user = user
-        # root.img= img.img
         root.product = product
         root.summa = product.price
         root.save()

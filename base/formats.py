@@ -104,6 +104,22 @@ def tkanImg_format(data):
 
     ])
 
+
+def comment_format(data):
+    # prod = product_format(data.product)
+    return OrderedDict([
+        ('comment_id', data.id),
+        ('user', data.user.id),
+        ('product', data.product.id),
+        ('text', data.text),
+        ('created_at', data.created_at)
+    ])
+
+
+
+
+
+
 # def format_course(data, lang=None):
 #     images = CourseImage.objects.select_related('course').filter(course_id=data.id).values('image')
 #

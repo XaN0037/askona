@@ -136,7 +136,7 @@ class Comment(models.Model):
 
 
 class Like(models.Model):
-    commentary = models.OneToOneField(Comment, related_name="like", on_delete=models.CASCADE)
+    commentary = models.ForeignKey(Comment, related_name="like", on_delete=models.CASCADE)
     like = models.BooleanField(default=False)
     dislike = models.BooleanField(default=False)
     user = models.ForeignKey(User, related_name='requirement_comment_likes',on_delete=models.CASCADE)

@@ -2,64 +2,95 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from api.v1.auth.servise import BearerAuth
-from api.v1.saved_product.serializer import Prosavedserializer
-from base.formats import prosaved_format
-from sayt.models import Product, Prosaved
+from api.v1.comment.serializer import Commentserializer
+from base.formats import comment_format
+from sayt.models import Comment, Product, Like
 
 
-class ProsavedView(GenericAPIView):
-    serializer_class = Prosavedserializer
+class CommentView(GenericAPIView):
+    serializer_class = Commentserializer
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BearerAuth,)
 
     def post(self, request, *args, **kwargs):
-        product_id = request.data['product_id']
         user = request.user
-        if not product_id:
-            return Response({
-                "Error": "product_id kiritilmagan"
-            })
-
-        product = Product.objects.filter(pk=product_id).first()
-
-        if not product:
-            return Response({
-                "Error": "bunaqa idli product mavjut emas"
-            })
-
-        product_saved = Prosaved.objects.filter(product_id=product_id).first()
-
-        if product_saved:
-            return Response({
-                "Error": "bunaqa id_li product allaqachon saqlangan"
-            })
-        
-        root = Prosaved()
-        root.user = user
-        root.product_id = product_id
-        root.save()
-
-        return Response({'success': prosaved_format(root)})
-
-    def delete(self, request, *args, **kwargs):
         data = request.data
-        if not data:
+        method = data.get('method')
+        params = data.get('params')
+
+        if not method:
             return Response({
-                "Error": "saved_id kiritilmagan"
+                "Error": "method kiritilmagan"
             })
 
-        saved_id = data['saved_id']
-
-        product_saved_id = Prosaved.objects.filter(pk=saved_id).first()
-
-        if not product_saved_id:
+        if params is None:
             return Response({
-                "Error": "bunaqa id li product saqlanmagan"
+                "Error": "params kiritilmagan"
             })
-        if product_saved_id:
-            product_saved_id.delete()
-            return Response({
-                "Success": "saqlangan product o'chirib tashlandi"
-            })
+
+        if method == "commentadd":
+            product_id = Product.objects.filter(pk=params["product_id"]).first()
+            if not product_id:
+                return Response({
+                    "Error": "bu id da product yo'q"
+                })
+
+            root = Comment()
+            root.user = user
+            root.product = product_id
+            root.text = params["text"]
+            root.save()
+            return Response({"saved": comment_format(root)})
+
+        if method == "like":
+            comment_id = Comment.objects.filter(pk=params["comment_id"]).first()
+            if not comment_id:
+                return Response({
+                    "Error": "bu id da comment yo'q"
+                })
+
+            if params['liketype'] == "like":
+
+                like = Like.objects.filter(commentary_id=comment_id, user_id=user.id).first()
+
+                if like:
+                    like.user = user
+                    like.like = True
+                    like.dislike = False
+                    like.commentary = comment_id
+                    like.save()
+                else:
+                    root = Like()
+                    root.user = user
+                    root.like = True
+                    root.dislike = False
+                    root.commentary = comment_id
+                    root.save()
+                return Response({
+                    "succes": "liked"
+                })
+
+            if params['liketype'] == "dislike":
+
+                like = Like.objects.filter(commentary_id=comment_id, user_id=user.id).first()
+
+                if like:
+                    like.user = user
+                    like.like = False
+                    like.dislike = True
+                    like.commentary = comment_id
+                    like.save()
+                else:
+                    root = Like()
+                    root.user = user
+                    root.like = False
+                    root.dislike = True
+                    root.commentary = comment_id
+                    root.save()
+                return Response({
+                    "succes": "disliked"
+                })
+
+
 
 

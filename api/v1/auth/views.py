@@ -90,7 +90,8 @@ class AuthView(GenericAPIView):
 
                 })
 
-            users = User.objects.filter(mobile=params["mobile"]).first() or User.objects.filter(mobile="+"+params["mobile"]).first()
+            users = User.objects.filter(mobile=params["mobile"]).first() or User.objects.filter(
+                mobile="+" + params["mobile"]).first()
             if users:
                 return Response(
                     {
@@ -101,13 +102,13 @@ class AuthView(GenericAPIView):
             code = random.randint(10000, 99999)
             key = generate_key(50) + "$" + str(code) + "$" + uuid.uuid1().__str__()
             otp = code_decoder(key)
-            sms = sms_sender(params['mobile'], code)
+            # sms = sms_sender(params['mobile'], code)
 
-            if sms.get('status') != "waiting":
-                return Response({
-                    "error": "sms xizmatida qandaydir muommo",
-                    "data": sms
-                })
+            # if sms.get('status') != "waiting":
+            #     return Response({
+            #         "error": "sms xizmatida qandaydir muommo",
+            #         "data": sms
+            #     })
             root = OTP()
             root.mobile = params['mobile']
             root.key = otp
@@ -161,7 +162,8 @@ class AuthView(GenericAPIView):
                 return Response({
                     "Error": "Xato OTP"
                 })
-            user = User.objects.filter(mobile=otp.mobile).first() or User.objects.filter(mobile="+"+otp.mobile).first()
+            user = User.objects.filter(mobile=otp.mobile).first() or User.objects.filter(
+                mobile="+" + otp.mobile).first()
 
             otp.state = "confirmed"
             otp.save()

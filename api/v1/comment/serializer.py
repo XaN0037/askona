@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from sayt.models import Prosaved
+from sayt.models import Comment
 
 
-class Prosavedserializer(serializers.ModelSerializer):
+class Commentserializer(serializers.ModelSerializer):
     class Meta:
-        model = Prosaved
+        model = Comment
         fields = '__all__'
 
