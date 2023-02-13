@@ -13,6 +13,14 @@ def format(data):
     ])
 
 
+def category_format(data):
+    return OrderedDict([
+        ('id', data.id),
+        ('content', data.content),
+        ('slug', data.slug),
+    ])
+
+
 # def tkan_format(data):
 #     return OrderedDict([
 #         ('id', data.id),
@@ -106,13 +114,27 @@ def tkanImg_format(data):
 
 
 def comment_format(data):
-    # prod = product_format(data.product)
+
+    prod = product_format(data.product)
     return OrderedDict([
         ('comment_id', data.id),
         ('user', data.user.id),
         ('product', data.product.id),
         ('text', data.text),
         ('created_at', data.created_at)
+    ])
+
+
+
+def discount_format(data):
+    prod = product_format(data.product_id)
+    return OrderedDict([
+
+        ('id', data.id),
+        ('product', prod),
+        ('procent', data.procent),
+        ('start_date', data.start_date),
+        ('end_date', data.end_date),
     ])
 
 

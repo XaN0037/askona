@@ -52,15 +52,21 @@ class Product(Character):
     sub_ctg = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=128)
-    sale = models.DateTimeField()
     price = models.IntegerField(default=0)
-    price_true = models.IntegerField(null=True, blank=True)
     credit = models.IntegerField()
     bonus = models.IntegerField()
     size = models.CharField(max_length=122)
 
     def __str__(self):
         return f"{self.name}"
+
+class Discount(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    procent = models.IntegerField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    def __str__(self):
+        return f"{self.product.name}"
 
 
 class ProductImg(models.Model):
@@ -144,11 +150,11 @@ class Like(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        if self.like:
+        if kwargs.get('key') == "like":
             self.dislike = False
-        elif self.dislike:
+        elif kwargs.get('key') == "dislike":
             self.like = False
-
+        kwargs.pop('key')
         return super(Like, self).save(*args, **kwargs)
 
 

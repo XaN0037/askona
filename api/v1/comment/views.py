@@ -7,6 +7,16 @@ from base.formats import comment_format
 from sayt.models import Comment, Product, Like
 
 
+
+def saver(model, type):
+    model.dislike = True if type == "dislike" else False
+    model.like = True if type == "like" else False
+    model.save(key=type)
+
+    return {
+        "success": f"{type}d"
+    }
+
 class CommentView(GenericAPIView):
     serializer_class = Commentserializer
     permission_classes = (IsAuthenticated,)
@@ -49,48 +59,40 @@ class CommentView(GenericAPIView):
                     "Error": "bu id da comment yo'q"
                 })
 
-            if params['liketype'] == "like":
+            # if params['liketype'] == "like":
+            #
+            #     like = Like.objects.filter(commentary_id=comment_id, user_id=user.id).first()
+            #
+            #     if like:
+            #         like.like = True
+            #         like.save()
+            #     else:
+            #         root = Like()
+            #         root.user = user
+            #         root.like = True
+            #         root.commentary = comment_id
+            #         root.save()
+            #     return Response({
+            #         "succes": "liked"
+            #     })
+            #
+            # if params['liketype'] == "dislike":
+            #
+            #     like = Like.objects.filter(commentary_id=comment_id, user_id=user.id).first()
+            #
+            #     if like:
+            #         like.dislike = True
+            #         like.save()
+            #     else:
+            #         root = Like()
+            #         root.user = user
+            #         root.dislike = True
+            #         root.commentary = comment_id
+            #         root.save()
+            #     return Response({
+            #         "succes": "disliked"
+            #     })
+            #
+            like = Like.objects.get_or_create(commentary_id=comment_id, user_id=user.id)[0]
 
-                like = Like.objects.filter(commentary_id=comment_id, user_id=user.id).first()
-
-                if like:
-                    like.user = user
-                    like.like = True
-                    like.dislike = False
-                    like.commentary = comment_id
-                    like.save()
-                else:
-                    root = Like()
-                    root.user = user
-                    root.like = True
-                    root.dislike = False
-                    root.commentary = comment_id
-                    root.save()
-                return Response({
-                    "succes": "liked"
-                })
-
-            if params['liketype'] == "dislike":
-
-                like = Like.objects.filter(commentary_id=comment_id, user_id=user.id).first()
-
-                if like:
-                    like.user = user
-                    like.like = False
-                    like.dislike = True
-                    like.commentary = comment_id
-                    like.save()
-                else:
-                    root = Like()
-                    root.user = user
-                    root.like = False
-                    root.dislike = True
-                    root.commentary = comment_id
-                    root.save()
-                return Response({
-                    "succes": "disliked"
-                })
-
-
-
-
+            return Response(saver(like, params['liketype']))
