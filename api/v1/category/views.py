@@ -8,12 +8,10 @@ from sayt.models import Category
 
 
 class CategoryView(GenericAPIView):
-    # serializer_class = Commentserializer
     # permission_classes = (IsAuthenticated,)
     # authentication_classes = (BearerAuth,)
 
     def post(self, request, *args, **kwargs):
-        # user = request.user
         data = request.data
         method = data.get('method')
         params = data.get('params')

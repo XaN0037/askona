@@ -25,9 +25,9 @@ class Category(models.Model):
 class Subcategory(models.Model):
     name = models.CharField(max_length=128)
     ctg = models.ForeignKey(Category, on_delete=models.CASCADE)
-    def __str__(self):
-            return f"{self.name}"
 
+    def __str__(self):
+        return f"{self.name}"
 
 
 class Character(models.Model):
@@ -52,7 +52,7 @@ class Product(Character):
     sub_ctg = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=128)
-    price = models.IntegerField(default=0)
+    price = models.IntegerField()
     credit = models.IntegerField()
     bonus = models.IntegerField()
     size = models.CharField(max_length=122)
@@ -60,13 +60,20 @@ class Product(Character):
     def __str__(self):
         return f"{self.name}"
 
+
 class Discount(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    procent = models.IntegerField()
+    procent = models.IntegerField(blank=True, null=True, default=0)
+    price = models.IntegerField()
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
+
     def __str__(self):
         return f"{self.product.name}"
+
+    def save(self, *args, **kwargs):
+        self.procent = (self.price // self.product.price) * 100
+        return super(Discount, self).save(*args, **kwargs)
 
 
 class ProductImg(models.Model):
@@ -145,16 +152,14 @@ class Like(models.Model):
     commentary = models.ForeignKey(Comment, related_name="like", on_delete=models.CASCADE)
     like = models.BooleanField(default=False)
     dislike = models.BooleanField(default=False)
-    user = models.ForeignKey(User, related_name='requirement_comment_likes',on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='requirement_comment_likes', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def save(self, *args, **kwargs):
-        if kwargs.get('key') == "like":
-            self.dislike = False
-        elif kwargs.get('key') == "dislike":
-            self.like = False
-        kwargs.pop('key')
-        return super(Like, self).save(*args, **kwargs)
-
-
+    # def save(self, *args, **kwargs):
+    #     if kwargs.get('key') == "like":
+    #         self.dislike = False
+    #     elif kwargs.get('key') == "dislike":
+    #         self.like = False
+    #     kwargs.pop('key')
+    #     return super(Like, self).save(*args, **kwargs)

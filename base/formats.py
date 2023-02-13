@@ -21,15 +21,15 @@ def category_format(data):
     ])
 
 
-# def tkan_format(data):
-#     return OrderedDict([
-#         ('id', data.id),
-#         ('product', product_format(data.product)),
-#         ('user_id', data.tkan_name),
-#         ('soni', data.tkan_material),
-#         ('summa', data.tkan_price),
-#
-#     ])
+def tkan_format(data):
+    return OrderedDict([
+        ('id', data.id),
+        ('product', product_format(data.product)),
+        ('user_id', data.tkan_name),
+        ('soni', data.tkan_material),
+        ('summa', data.tkan_price),
+
+    ])
 
 
 def product_format(data):
@@ -41,10 +41,7 @@ def product_format(data):
         ('sub_ctg', data.sub_ctg.id),
         ('name', data.name),
         ('code', data.code),
-        ('sale', data.sale),
         ('price', data.price),
-        ('price', data.price),
-        ('price_true', data.price_true),
         ('credit', data.credit),
         ('bonus', data.bonus),
         ('size', data.size),
@@ -127,7 +124,7 @@ def comment_format(data):
 
 
 def discount_format(data):
-    prod = product_format(data.product_id)
+    prod = product_format(data.product)
     return OrderedDict([
 
         ('id', data.id),

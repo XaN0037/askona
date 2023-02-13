@@ -15,4 +15,5 @@ urlpatterns = [
     path("comment/", CommentView.as_view()),
     path("category/", CategoryView.as_view()),
     path("discount/<int:pk>/", DiscountView.as_view()),
+    path("discount/", DiscountView.as_view()),
 ]

@@ -7,15 +7,15 @@ from base.formats import comment_format
 from sayt.models import Comment, Product, Like
 
 
-
 def saver(model, type):
     model.dislike = True if type == "dislike" else False
     model.like = True if type == "like" else False
-    model.save(key=type)
+    model.save()
 
     return {
         "success": f"{type}d"
     }
+
 
 class CommentView(GenericAPIView):
     serializer_class = Commentserializer
