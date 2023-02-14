@@ -59,6 +59,8 @@ class DiscountView(GenericAPIView):
             return Response({"data": resul})
 
         result = [discount_format(i) for i in Discount.objects.all()]
+        if not result:
+            result = "Discountda Maxsulot umuman yo'q"
         return Response({
             "data": result
         })

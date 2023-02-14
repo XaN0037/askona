@@ -79,7 +79,8 @@ class BasketView(GenericAPIView):
             return Response({
                 "Error": "bron_id kiritilmagan"
             })
-        basket = Basket.objects.filter(pk=bron_id, user_id=request.user.id).first()
+        basket = Basket.objects.filter(pk=bron_id, user_id=user.id)
+
         if not basket:
             return Response({
                 "Error": " bu id da bron topilmadi"
@@ -91,12 +92,10 @@ class BasketView(GenericAPIView):
                 "Success": "Bron qilingan tarif o'chirib tashlandi"
             })
 
+
     def get(self, request, *args, **kwargs):
         user = request.user
-        if not user:
-            return Response({
-                "Error": "bunaqa user mavjud emas "
-            })
+
         user_basket = Basket.objects.filter(user_id=request.user.id).first()
         if not user_basket:
             return Response({

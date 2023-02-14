@@ -53,4 +53,24 @@ class CategoryView(GenericAPIView):
                     "succes": " Category o'chirildi"
                 })
 
+    def get(self, requests,pk=None, *args, **kwargs):
+
+        if pk:
+
+            try:
+                discount = Category.objects.get(pk=pk)
+                resul = category_format(discount)
+            except:
+                resul = "Maxsulot topilmadi"
+            return Response({"data": resul})
+
+        result = [category_format(i) for i in Category.objects.all()]
+        if not result:
+            result = "Category umuman yo'q"
+        return Response({
+            "data": result
+        })
+
+
+
 
