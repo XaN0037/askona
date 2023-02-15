@@ -8,6 +8,7 @@ from api.v1.discount.views import DiscountView
 from api.v1.filter.views import SearchView, Filteratsiya
 from api.v1.product.views import ProductView
 from api.v1.saved_product.views import ProsavedView
+from api.v1.tkan.views import PartnersView
 
 urlpatterns = [
     path("auth/", AuthView.as_view()),
@@ -19,8 +20,12 @@ urlpatterns = [
     path("category/<int:pk>/", CategoryView.as_view()),
     path("discount/<int:pk>/", DiscountView.as_view()),
     path("discount/", DiscountView.as_view()),
+<<<<<<< HEAD
     path("product/", ProductView.as_view()),
     path("product/<int:pk>/", ProductView.as_view()),
     path("search/", SearchView.as_view()),
     path("filter/", Filteratsiya.as_view()),
+=======
+    path('tkan/', PartnersView.as_view())
+>>>>>>> e5fb943683ff1f041b241cca89386c97f60a37df
 ]
