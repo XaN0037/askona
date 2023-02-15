@@ -1,6 +1,6 @@
 from collections import OrderedDict
 
-from sayt.models import ProductImg, TkanImg
+from sayt.models import ProductImg, TkanImg, Subcategory, ColorImg, Discount
 from src.settings import MEDIA_URL
 
 
@@ -21,6 +21,16 @@ def category_format(data):
     ])
 
 
+def subcategory_format(data):
+    print('1111111111111111111111111111111', data)
+    print(data.id)
+    return OrderedDict([
+        ('id', data.id),
+        ('name', data.name),
+        ('ctg', None if not data.ctg else category_format(data.ctg)),
+    ])
+
+
 def tkan_format(data):
     return OrderedDict([
         ('id', data.id),
@@ -35,10 +45,23 @@ def tkan_format(data):
 def product_format(data):
     images = ProductImg.objects.select_related('product').filter(product_id=data.id).values('img')
     tkan = TkanImg.objects.select_related('product').filter(product_id=data.id).values('img')
+    color = ColorImg.objects.select_related('product').filter(product=data)
+    dis = Discount.objects.select_related('product').filter(product=data).first()
+    if dis:
+        dis = discount_format(dis)
+    else:
+        dis = {}
+    print(color)
+    colors = []
+    for i in color:
+        colors.append({
+            "imgs": "" if not i.img else i.img.url,
+            "name": i.color
+        })
 
     return OrderedDict([
         ('id', data.id),
-        ('sub_ctg', data.sub_ctg.id),
+        ('sub_ctg', None if not data.sub_ctg else subcategory_format(data.sub_ctg)),
         ('name', data.name),
         ('code', data.code),
         ('price', data.price),
@@ -46,8 +69,9 @@ def product_format(data):
         ('bonus', data.bonus),
         ('size', data.size),
         ('images', [] if not images else [MEDIA_URL + x['img'] for x in images]),
-        ('tkans', [] if not tkan else [MEDIA_URL + x['img'] for x in tkan])
-
+        ('tkans', [] if not tkan else [MEDIA_URL + x['img'] for x in tkan]),
+        ('color', colors),
+        ('dis', dis)
 
     ])
 
@@ -111,7 +135,6 @@ def tkanImg_format(data):
 
 
 def comment_format(data):
-
     prod = product_format(data.product)
     return OrderedDict([
         ('comment_id', data.id),
@@ -122,22 +145,13 @@ def comment_format(data):
     ])
 
 
-
 def discount_format(data):
-    prod = product_format(data.product)
     return OrderedDict([
-
         ('id', data.id),
-        ('product', prod),
         ('procent', data.procent),
         ('start_date', data.start_date),
         ('end_date', data.end_date),
     ])
-
-
-
-
-
 
 # def format_course(data, lang=None):
 #     images = CourseImage.objects.select_related('course').filter(course_id=data.id).values('image')

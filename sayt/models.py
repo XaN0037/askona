@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 # Create your models here.
@@ -70,6 +72,17 @@ class Discount(models.Model):
 
     def __str__(self):
         return f"{self.product.name}"
+
+    # def __delete__(self, instance):
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     print(">>>>", args)
+    #     if args:
+    #         pro = self.__class__.objects.get(pk=int(args[0])).end_date
+    #         print(pro)
+    #         if (pro.end_date - datetime.datetime.now()).total_seconds() < 0:
+    #             pro.delete()
 
     def save(self, *args, **kwargs):
         self.procent = (self.price // self.product.price) * 100
