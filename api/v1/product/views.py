@@ -13,23 +13,16 @@ class ProductView(GenericAPIView):
         if pk:
             try:
                 result = product_format(Product.objects.get(pk=pk))
-                # print(result)
-                # print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', result)
                 return Response(result)
             except:
-
                 result = {"ERROR": f"{pk} id bo'yicha hech qanday ma'lumot topilmadi"}
-                print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<', result)
                 return Response(result)
-
         else:
             result = []
             for i in Product.objects.all():
                 result.append(product_format(i))
 
         return Response(result)
-
-
 
     def put(self, requests, pk, *args, **kwargs):
 
@@ -39,3 +32,15 @@ class ProductView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         root = serializer.save()
         return Response(product_format(root))
+
+    def delete(self, requests, pk, *args, **kwargs):
+        prod= Product.objects.filter(pk=pk).first()
+        if prod:
+            # prod.delete()
+            result = "product o'chirildi"
+        else:
+            result = "product topilmadi"
+        return Response ({"reultat":result})
+
+
+
