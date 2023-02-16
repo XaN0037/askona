@@ -1,4 +1,4 @@
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from rest_framework.response import Response
 
 from api.v1.product.serializer import Productserializer
@@ -6,7 +6,7 @@ from base.formats import product_format
 from sayt.models import Product
 
 
-class ProductView(GenericAPIView):
+class ProductView(ListCreateAPIView):
     serializer_class = Productserializer
 
     def get(self, requests, pk=None, *args, **kwargs):
