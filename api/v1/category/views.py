@@ -40,18 +40,7 @@ class CategoryView(GenericAPIView):
             root.save()
             return Response({"Saved": category_format(root)})
 
-        if method == "category_delete":
-            category_id = params['category_id']
-            nott = Category.objects.filter(pk=category_id).first()
-            if not nott:
-                return Response({
-                    "Error": " Bunaqa Id li category mavjud emas"
-                })
-            if nott:
-                nott.delete()
-                return Response({
-                    "succes": " Category o'chirildi"
-                })
+
 
     def get(self, requests,pk=None, *args, **kwargs):
 
@@ -72,5 +61,11 @@ class CategoryView(GenericAPIView):
         })
 
 
-
+    def delete(self,requeste,pk,*args, **kwargs):
+        try:
+            category = Category.objects.get(pk=pk).delete()
+            result = f"categoriya {pk} id o'chirildi"
+        except:
+            result = f"{pk}da categoriya topilmadi"
+        return Response(result)
 
