@@ -18,6 +18,8 @@ def category_format(data):
         ('id', data.id),
         ('content', data.content),
         ('slug', data.slug),
+        ('img', data.img.url),
+
     ])
 
 

@@ -14,6 +14,7 @@ from api.models import User
 
 class Category(models.Model):
     content = models.CharField(max_length=128)
+    img = models.ImageField()
     slug = models.SlugField(max_length=128, unique=True, blank=True)
     is_main = models.BooleanField(default=False)
 

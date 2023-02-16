@@ -1,3 +1,5 @@
+import re
+
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -22,8 +24,35 @@ class UserView(GenericAPIView):
         root = serializer.save()
         return Response(format(root))
 
-    def post(self, req):
-        data = req.data
+    def post(self, requests, *args, **kwargs):
+        data = requests.data
+        # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",data)
+        # method = data['method']
+        # params = data['params']
+        # if not method:
+        #     return Response({
+        #         "error": "method to'ldirilmagan"
+        #     })
+        # nott = "old" if "old" not in params else "new" if 'new' not in params else None
+        # if nott:
+        #     return Response({
+        #         "error": f"{nott} sections is not filled to'ldirilmagan"
+        #     })
+        # if len (params["new"]) <7 or params['new'].islower() or params["new"].isalpha():
+        #     return Response({
+        #         "status": "Parolda 8 ta simvol yoki katta xarf qatnashishi shart"
+        #     })
+        #
+        # if not requests.user.check_password(params['old']):
+        #     return Response({"error":"eski parol bilan bir xil qaramaysizmi"})
+        #
+        # requests.user.set_password(params['new'])
+        # requests.user.save()
+        #
+        # return Response({"status":"parol pizdess karocheee",
+        #                  "user": "bu joyda userni format qivorasss Sanjar aka"})
+        #
+
         nott = "old" if "old" not in data else "new" if 'new' not in data else None
         if nott:
             return Response({
@@ -33,15 +62,14 @@ class UserView(GenericAPIView):
             return Response({
                 "status": "Parolda 8 ta simvol yoki katta xarf qatnashishi shart"})
 
-        if not req.user.check_password(data['old']):
+        if not requests.user.check_password(data['old']):
             return Response({
                 "status": "old password is not correct",
 
             })
-        req.user.set_password(data['new'])
-        req.user.save()
+        requests.user.set_password(data['new'])
+        requests.user.save()
 
         return Response({
             "status": "password changed",
-            "user": format(req.user)
-        })
+            "user": format(requests.user)})
