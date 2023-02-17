@@ -24,8 +24,6 @@ def category_format(data):
 
 
 def subcategory_format(data):
-    print('1111111111111111111111111111111', data)
-    print(data.id)
     return OrderedDict([
         ('id', data.id),
         ('name', data.name),

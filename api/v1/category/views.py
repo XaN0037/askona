@@ -1,15 +1,10 @@
 from rest_framework.generics import GenericAPIView
-# from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-# from api.v1.auth.servise import BearerAuth
-# from api.v1.comment.serializer import Commentserializer
 from base.formats import category_format
 from sayt.models import Category
 
 
 class CategoryView(GenericAPIView):
-    # permission_classes = (IsAuthenticated,)
-    # authentication_classes = (BearerAuth,)
 
     def post(self, request, *args, **kwargs):
         data = request.data
