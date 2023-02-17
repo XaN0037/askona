@@ -1,10 +1,8 @@
 from rest_framework.generics import GenericAPIView
 # from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-# from api.v1.auth.servise import BearerAuth
-# from api.v1.comment.serializer import Commentserializer
-from base.formats import category_format, subcategory_format, product_format
-from sayt.models import Category, Subcategory, Product
+from base.formats import  subcategory_format, product_format
+from sayt.models import  Subcategory, Product
 
 
 class SubcategoryView(GenericAPIView):
