@@ -1,4 +1,4 @@
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from rest_framework.response import Response
 
 from api.v1.product.serializer import Productserializer
@@ -6,7 +6,7 @@ from base.formats import product_format
 from sayt.models import Product
 
 
-class ProductView(GenericAPIView):
+class ProductView(ListCreateAPIView):
     serializer_class = Productserializer
 
     def get(self, requests, pk=None, *args, **kwargs):
@@ -33,13 +33,14 @@ class ProductView(GenericAPIView):
         root = serializer.save()
         return Response(product_format(root))
 
-    def delete(self, requeste, pk, *args, **kwargs):
-        try:
-            category = Product.objects.get(pk=pk).delete()
-            result = f"product {pk} id o'chirildi"
-        except:
-            result = f"{pk}da product topilmadi"
-        return Response(result)
+    def delete(self, requests, pk, *args, **kwargs):
+        prod= Product.objects.filter(pk=pk).first()
+        if prod:
+            # prod.delete()
+            result = "product o'chirildi"
+        else:
+            result = "product topilmadi"
+        return Response ({"reultat":result})
 
 
 
