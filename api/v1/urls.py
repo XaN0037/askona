@@ -5,7 +5,7 @@ from api.v1.basket.views import BasketView
 from api.v1.category.views import CategoryView
 from api.v1.comment.views import CommentView
 from api.v1.discount.views import DiscountView
-from api.v1.filter.views import SearchView, Filteratsiya
+from api.v1.filter.views import SearchView, Filteratsiya, CustomFilter
 from api.v1.product.views import ProductView
 from api.v1.saved_product.views import ProsavedView
 from api.v1.sub_category.views import SubcategoryView
@@ -34,6 +34,7 @@ urlpatterns = [
     path("search/", SearchView.as_view()),
     path("filter/", Filteratsiya.as_view()),
 
-    path('tkan/', PartnersView.as_view())
+    path('tkan/', PartnersView.as_view()),
+    path('p-fil/', CustomFilter.as_view()),
 
 ]

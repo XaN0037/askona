@@ -4,9 +4,11 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from django.db import connection
 from contextlib import closing
+from rest_framework.views import APIView
 
+from api.v1.product.serializer import ProductFilterSerializer
 from base.formats import product_format
-from sayt.models import Product, ColorImg
+from sayt.models import Product
 
 
 def dictfetchall(cursor):
@@ -37,6 +39,7 @@ class SearchView(GenericAPIView):
 #     return query_params
 class Filteratsiya(GenericAPIView):
     def get(self, requests, *args, **kwargs):
+        print(requests.query_params)
         l = dict(requests.query_params)
 
         viewsql = ''
@@ -72,3 +75,28 @@ class Filteratsiya(GenericAPIView):
         return Response({
             "res": respons
         })
+
+
+class CustomFilter(APIView):
+
+    def get_queryset(self):
+        return Product.objects.select_related('sub_ctg')
+
+    def post(self, request):
+        params = self.request.query_params
+        ctg = params.get('ctg')
+        from_price = params.get('from_price')
+        to_price = params.get('to_price')
+        products = self.get_queryset()
+        if ctg:
+            products = products.filter(sub_ctg_id=int(ctg))
+        if from_price:
+            products = products.filter(price__gte=from_price)
+        if to_price:
+            products = products.filter(price__lte=to_price)
+        serializers = ProductFilterSerializer(products, many=True)
+        return Response(
+            {
+                'result': serializers.data
+            }
+        )

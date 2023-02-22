@@ -1,6 +1,6 @@
 from collections import OrderedDict
 
-from sayt.models import ProductImg, TkanImg, Subcategory, ColorImg, Discount
+from sayt.models import ProductImg, TkanImg, Subcategory, ColorImg, Discount, Character
 from src.settings import MEDIA_URL
 
 
@@ -47,6 +47,7 @@ def product_format(data):
     tkan = TkanImg.objects.select_related('product').filter(product_id=data.id).values('img')
     color = ColorImg.objects.select_related('product').filter(product=data)
     dis = Discount.objects.select_related('product').filter(product=data).first()
+    # character = Character.objects.select_related('product').filter(product=data).first()
     if dis:
         dis = discount_format(dis)
     else:
@@ -68,6 +69,20 @@ def product_format(data):
         ('credit', data.credit),
         ('bonus', data.bonus),
         ('size', data.size),
+        ('waranty', data.waranty),
+        ('collection', data.collection),
+        ('matras', data.matras),
+        ('xususiyatlari', data.xususiyatlari),
+        ('qoshimchalari', data.qoshimchalari),
+        ('balandligi', data.balandligi),
+        ('mehanizm', data.mehanizm),
+        ('massa', data.massa),
+        ('maqsad', data.maqsad),
+        ('razmer', data.razmer),
+        ('qattiqlik', data.qattiqlik),
+        ('brand', data.brand),
+
+
         ('images', [] if not images else [MEDIA_URL + x['img'] for x in images]),
         ('tkans', [] if not tkan else [MEDIA_URL + x['img'] for x in tkan]),
         ('color', colors),

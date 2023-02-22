@@ -82,6 +82,9 @@ class AuthView(GenericAPIView):
                 token.user = user
                 token.save()
 
+
+
+
         elif method == "step.one":
             nott = 'mobile' if "mobile" not in params else "lang" if "lang" not in params else None
             if nott:
