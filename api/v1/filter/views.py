@@ -36,7 +36,14 @@ class SearchView(GenericAPIView):
 # def checker(query_params):
 #     '' if 'new' not in  query_params else query_params.pop('new')
 #     '' if 'view' not in  query_params else query_params.pop('view')
+
 #     return query_params
+
+class CustomFilter(APIView):
+
+    def get_queryset(self):
+        return Product.objects.select_related('sub_ctg')
+
 class Filteratsiya(GenericAPIView):
     def get(self, requests, *args, **kwargs):
         print(requests.query_params)
@@ -69,6 +76,8 @@ class Filteratsiya(GenericAPIView):
                 {where}
                 {order_by} {viewsql}
                 """
+
+
         print(sql)
         respons = [product_format(x) for x in Product.objects.raw(sql)]
 
@@ -77,10 +86,6 @@ class Filteratsiya(GenericAPIView):
         })
 
 
-class CustomFilter(APIView):
-
-    def get_queryset(self):
-        return Product.objects.select_related('sub_ctg')
 
     def post(self, request):
         params = self.request.query_params
