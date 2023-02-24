@@ -12,18 +12,18 @@ class ProsavedView(GenericAPIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BearerAuth,)
 
-    def get(self,requests,*args,**kwargs):
-        user_product_saved = Prosaved.objects.filter(user_id=requests.user.id).first()
-        if not user_product_saved:
-            return Response({
-                "Error": " bu user maxsulot saqlamagan"
-            })
-        else:
-            result = []
-            for i in Prosaved.objects.all().filter(user_id=requests.user.id):
-                result.append(prosaved_format(i))
-
-        return Response(result)
+    # def get(self,requests,*args,**kwargs):
+    #     user_product_saved = Prosaved.objects.filter(user_id=requests.user.id).first()
+    #     if not user_product_saved:
+    #         return Response({
+    #             "Error": " bu user maxsulot saqlamagan"
+    #         })
+    #     else:
+    #         result = []
+    #         for i in Prosaved.objects.all().filter(user_id=requests.user.id):
+    #             result.append(prosaved_format(i))
+    #
+    #     return Response(result)
     def post(self, request, *args, **kwargs):
         product_id = request.data['product_id']
         user = request.user
