@@ -89,25 +89,25 @@ WSGI_APPLICATION = 'src.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.' + os.getenv('DB_ENGINE', "postgresql_psycopg2"),
-        'NAME': os.getenv('DB_NAME', "d1l0rd9av1cnqq"),
-        'USER': os.getenv('DB_USER', "sjoqereawuhjfa"),
-        'PASSWORD': os.getenv('PASS', "dc1053dd8065938ca60cff6d7d8c719cf9a4a5113fa97297c6768fc384a7bb14"),
-        'HOST': os.getenv('DB_HOST', "ec2-3-224-125-117.compute-1.amazonaws.com"),
-        'PORT': os.getenv('DB_HOST', "5432"),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-db_from_env = dj_database_url.config(conn_max_age=600)
-
-DATABASES['default'].update(db_from_env)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.' + os.getenv('DB_ENGINE', "postgresql_psycopg2"),
+#         'NAME': os.getenv('DB_NAME', "d1l0rd9av1cnqq"),
+#         'USER': os.getenv('DB_USER', "sjoqereawuhjfa"),
+#         'PASSWORD': os.getenv('PASS', "dc1053dd8065938ca60cff6d7d8c719cf9a4a5113fa97297c6768fc384a7bb14"),
+#         'HOST': os.getenv('DB_HOST', "ec2-3-224-125-117.compute-1.amazonaws.com"),
+#         'PORT': os.getenv('DB_HOST', "5432"),
+#     }
+# }
+# db_from_env = dj_database_url.config(conn_max_age=600)
+#
+# DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -151,7 +151,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-MEDIA_URL = "media/"
+MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
