@@ -22,7 +22,9 @@ class CommentView(GenericAPIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BearerAuth,)
 
+
     def post(self, request, *args, **kwargs):
+
         user = request.user
         data = request.data
         method = data.get('method')
@@ -96,3 +98,19 @@ class CommentView(GenericAPIView):
             like = Like.objects.get_or_create(commentary_id=comment_id, user_id=user.id)[0]
 
             return Response(saver(like, params['liketype']))
+
+class Comments(GenericAPIView):
+    def get(self,requests, pk, *args, **kwargs):
+
+        if not pk:
+            return Response({
+                "Error": "pk kiritilmagan"
+            })
+
+        comments = Comment.objects.filter(product_id=pk)
+
+        result = [comment_format(x) for x in comments]
+        return Response({
+            "cnt": len(result),
+            "data": result
+        })

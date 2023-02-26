@@ -66,6 +66,7 @@ class BasketView(GenericAPIView):
             })
 
         bron.quantity = quantity
+
         bron.save()
         return Response({
             "data": basket_format(bron)
@@ -79,7 +80,7 @@ class BasketView(GenericAPIView):
             return Response({
                 "Error": "bron_id kiritilmagan"
             })
-        basket = Basket.objects.filter(pk=bron_id, user_id=user.id)
+        basket = Basket.objects.filter(pk=bron_id, user_id=user.id).first()
 
         if not basket:
             return Response({

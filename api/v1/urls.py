@@ -3,7 +3,7 @@ from api.v1.auth.users import UserView
 from api.v1.auth.views import AuthView
 from api.v1.basket.views import BasketView
 from api.v1.category.views import CategoryView
-from api.v1.comment.views import CommentView
+from api.v1.comment.views import CommentView, Comments
 from api.v1.discount.views import DiscountView
 from api.v1.filter.views import SearchView, Filteratsiya, CustomFilter
 from api.v1.product.views import ProductView
@@ -17,7 +17,9 @@ urlpatterns = [
 
     path("basket/", BasketView.as_view()),
     path("prosaved/", ProsavedView.as_view()),
+
     path("comment/", CommentView.as_view()),
+    path("comment/<int:pk>/", Comments.as_view()),
 
     path("category/", CategoryView.as_view()),
     path("category/<int:pk>/", CategoryView.as_view()),

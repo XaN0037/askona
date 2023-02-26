@@ -151,9 +151,10 @@ def tkanImg_format(data):
 
 def comment_format(data):
     prod = product_format(data.product)
+    print("data.user>>>>>", data)
     return OrderedDict([
         ('comment_id', data.id),
-        ('user', data.user.id),
+        ('user', None if not data.user else format(data.user)),
         ('product', data.product.id),
         ('text', data.text),
         ('created_at', data.created_at)
