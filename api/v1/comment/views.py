@@ -55,11 +55,14 @@ class CommentView(GenericAPIView):
             return Response({"saved": comment_format(root)})
 
         if method == "like":
+            print("<<<<<<<<<<<<<<<<<<<<<DDDDDDDDDDDDDDDDDDDDD")
             comment_id = Comment.objects.filter(pk=params["comment_id"]).first()
+            print(">>>>>>>>>>>>>>>>>",comment_id)
             if not comment_id:
                 return Response({
                     "Error": "bu id da comment yo'q"
                 })
+
 
             # if params['liketype'] == "like":
             #
@@ -95,7 +98,7 @@ class CommentView(GenericAPIView):
             #         "succes": "disliked"
             #     })
             #
-            like = Like.objects.get_or_create(commentary_id=comment_id, user_id=user.id)[0]
+            like = Like.objects.get_or_create(commentary_id=params["comment_id"], user_id=user.id)[0]
 
             return Response(saver(like, params['liketype']))
 
@@ -108,6 +111,10 @@ class Comments(GenericAPIView):
             })
 
         comments = Comment.objects.filter(product_id=pk)
+        # if not comments:
+        #     return Response({
+        #         "Error": "bu pk da comment yo'q"
+        #     })
 
         result = [comment_format(x) for x in comments]
         return Response({
