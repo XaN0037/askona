@@ -75,6 +75,7 @@ class BasketView(GenericAPIView):
     def delete(self, request, *args, **kwargs):
 
         bron_id = request.data['bron_id']
+
         user = request.user
         if not bron_id:
             return Response({
@@ -107,4 +108,8 @@ class BasketView(GenericAPIView):
             for i in Basket.objects.all().filter(user_id=request.user.id):
                 result.append(basket_format(i))
 
+        result = {
+            "summa": sum([x['summa'] for x in result]),
+            "data": result
+        }
         return Response(result)
