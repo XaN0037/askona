@@ -1,7 +1,6 @@
 from rest_framework.exceptions import NotFound
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-
 from api.v1.tkan.services import tkan_format, tkan_pag, get_one_tkan
 from sayt.models import Tkan
 from .serializer import TkanSerializer

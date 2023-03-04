@@ -4,6 +4,7 @@ import uuid
 import datetime
 
 import requests
+from django.core.mail import send_mail
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import GenericAPIView
@@ -12,6 +13,7 @@ from api.v1.auth.serializer import Userserializer
 from api.models import User, OTP
 from api.v1.auth.servise import sms_sender
 from base.helper import code_decoder, generate_key
+from src import settings
 
 
 class AuthView(GenericAPIView):
@@ -82,15 +84,12 @@ class AuthView(GenericAPIView):
                 token.user = user
                 token.save()
 
-
-
-
         elif method == "step.one":
-            nott = 'mobile' if "mobile" not in params else "lang" if "lang" not in params else None
+            nott = 'mobile' if "mobile" not in params else "email" if "email" not in params \
+                else "lang" if "lang" not in params else None
             if nott:
                 return Response({
                     "Error": f"params.{nott} polyasi to'ldirilmagan"
-
                 })
 
             users = User.objects.filter(mobile=params["mobile"]).first() or User.objects.filter(
@@ -112,6 +111,11 @@ class AuthView(GenericAPIView):
             #         "error": "sms xizmatida qandaydir muommo",
             #         "data": sms
             #     })
+            send_mail(subject='ZAYBAL',
+                      message=f'tvoy yebuchiy kod: {code}, naxxuy',
+                      from_email=settings.EMAIL_HOST_USER,
+                      recipient_list=[f'{params["email"]}'])
+
             root = OTP()
             root.mobile = params['mobile']
             root.key = otp
@@ -121,8 +125,6 @@ class AuthView(GenericAPIView):
                 "otp": code,
                 "token": root.key
             })
-
-
 
         elif method == "step.two":
             nott = 'otp' if "otp" not in params else "token" if "token" not in params else None
@@ -178,20 +180,6 @@ class AuthView(GenericAPIView):
                 return Response({
                     "is_registered": False
                 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         else:
             return Response({

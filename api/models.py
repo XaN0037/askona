@@ -45,7 +45,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.mobile},{self.name}"
 
 
-
 class ServerTokens(models.Model):
     key = models.CharField(max_length=256)
     token = models.CharField(max_length=2000)
