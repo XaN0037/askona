@@ -100,21 +100,23 @@ class AuthView(GenericAPIView):
                         'Error': "Bunday mobile allaqachon ro'yxatdan  o'tgan"
                     }, status=status.HTTP_400_BAD_REQUEST
                 )
-
+            
             code = random.randint(10000, 99999)
             key = generate_key(50) + "$" + str(code) + "$" + uuid.uuid1().__str__()
             otp = code_decoder(key)
-            # sms = sms_sender(params['mobile'], code)
-
-            # if sms.get('status') != "waiting":
-            #     return Response({
-            #         "error": "sms xizmatida qandaydir muommo",
-            #         "data": sms
-            #     })
+            sms = sms_sender(params['mobile'], code)
+            """email"""
             send_mail(subject='ZAYBAL',
-                      message=f'tvoy yebuchiy kod: {code}, naxxuy',
+                      message=f'karochi auth email ishladi kod: {code}, puli qani',
                       from_email=settings.EMAIL_HOST_USER,
                       recipient_list=[f'{params["email"]}'])
+
+            if sms.get('status') != "waiting":
+                return Response({
+                    "error": "sms xizmatida qandaydir muommo",
+                    "data": sms
+                })
+
 
             root = OTP()
             root.mobile = params['mobile']
