@@ -105,8 +105,7 @@ class AuthView(GenericAPIView):
                 token.save()
 
         elif method == "step.one":
-            nott = 'mobile' if "mobile" not in params else "email" if "email" not in params \
-                else "lang" if "lang" not in params else None
+            nott = 'mobile' if "mobile" not in params else None
             if nott:
                 return Response({
                     "Error": f"params.{nott} polyasi to'ldirilmagan"
@@ -125,7 +124,7 @@ class AuthView(GenericAPIView):
             key = generate_key(50) + "$" + str(code) + "$" + uuid.uuid1().__str__()
             otp = code_decoder(key)
             sms = sms_sender(params['mobile'], code)
-            """email"""
+            # """email"""
             # send_mail(subject='ZAYBAL',
             #           message=f'karochi auth email ishladi kod: {code}, puli qani',
             #           from_email=settings.EMAIL_HOST_USER,
