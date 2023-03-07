@@ -110,9 +110,10 @@ class Comments(GenericAPIView):
             })
 
         comments = Comment.objects.filter(product_id=pk)
-
         result = [comment_format(x) for x in comments]
+        print(">>>>>>>>>>>>>",result)
         return Response({
+            # "count":dl(Like,comments.id),
             "cnt": len(result),
             "data": result
         })
