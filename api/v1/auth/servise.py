@@ -15,9 +15,9 @@ class BearerAuth(TokenAuthentication):
 def sms_sender(mobile, otp, lan="uz"):
     token = ServerTokens.objects.get(key="sms")
     txt = {
-        "uz": f"sizning maxfiy codingiz {otp}, (uz). Bu codeni hech kimga bermang",
-        "ru": f"kode {otp}, (ru)",
-        "en": f"code {otp}, (en)"
+        "uz": f"sizning maxfiy codingiz {otp}, (uz). Bu codeni hech kimga bermang"
+        # "ru": f"kode {otp}, (ru)",
+        # "en": f"code {otp}, (en)"
     }
 
     url = "https://notify.eskiz.uz/api/message/sms/send"
