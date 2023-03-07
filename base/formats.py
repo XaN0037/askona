@@ -1,6 +1,6 @@
 from collections import OrderedDict
 
-from sayt.models import ProductImg, TkanImg, Subcategory, ColorImg, Discount, Character
+from sayt.models import ProductImg, TkanImg, Subcategory, ColorImg, Discount, Character, Like
 from src.settings import MEDIA_URL
 
 
@@ -52,7 +52,6 @@ def product_format(data):
         dis = discount_format(dis)
     else:
         dis = {}
-    print(color)
     colors = []
     for i in color:
         colors.append({
@@ -151,13 +150,22 @@ def tkanImg_format(data):
 
 def comment_format(data):
     prod = product_format(data.product)
-    print("data.user>>>>>", data)
     return OrderedDict([
         ('comment_id', data.id),
         ('user', None if not data.user else format(data.user)),
         ('product', data.product.id),
         ('text', data.text),
         ('created_at', data.created_at)
+    ])
+
+
+
+def like_dislike_format(data):
+    print('\n','bu like',data.like,'\n')
+    return OrderedDict([
+
+
+
     ])
 
 

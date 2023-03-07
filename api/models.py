@@ -61,3 +61,22 @@ class OTP(models.Model):
     state = models.CharField(max_length=128, default="step_one")
     created_at = models.DateTimeField(auto_now_add=True, auto_now=False, editable=False)
     updated_at = models.DateTimeField(auto_now_add=False, auto_now=True)
+
+
+"""qo'wildi"""
+
+
+class Follower(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner")
+    subscriber = models.ForeignKey(User, on_delete=models.CASCADE, related_name="subscriber")
+
+    def __str__(self):
+        return f'{self.subscriber} yaratdi {self.user}'
+
+
+class SocialLink(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="social_links")
+    link = models.URLField(max_length=100)
+
+    def __str__(self):
+        return f'{self.user}'

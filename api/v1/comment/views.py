@@ -3,17 +3,20 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from api.v1.auth.servise import BearerAuth
 from api.v1.comment.serializer import Commentserializer
-from base.formats import comment_format
+from base.formats import comment_format, like_dislike_format
 from sayt.models import Comment, Product, Like
 
 
-def saver(model, type):
+def saver(model, type, comment):
     model.dislike = True if type == "dislike" else False
     model.like = True if type == "like" else False
     model.save()
 
+
+def dl(self, cmt):
     return {
-        "success": f"{type}d"
+        "like": self.objects.filter(commentary=cmt, like=True).count(),
+        "dislike": self.objects.filter(commentary=cmt, dislike=True).count()
     }
 
 
@@ -21,7 +24,6 @@ class CommentView(GenericAPIView):
     serializer_class = Commentserializer
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BearerAuth,)
-
 
     def post(self, request, *args, **kwargs):
 
@@ -55,14 +57,11 @@ class CommentView(GenericAPIView):
             return Response({"saved": comment_format(root)})
 
         if method == "like":
-            print("<<<<<<<<<<<<<<<<<<<<<DDDDDDDDDDDDDDDDDDDDD")
             comment_id = Comment.objects.filter(pk=params["comment_id"]).first()
-            print(">>>>>>>>>>>>>>>>>",comment_id)
             if not comment_id:
                 return Response({
                     "Error": "bu id da comment yo'q"
                 })
-
 
             # if params['liketype'] == "like":
             #
@@ -99,22 +98,18 @@ class CommentView(GenericAPIView):
             #     })
             #
             like = Like.objects.get_or_create(commentary_id=params["comment_id"], user_id=user.id)[0]
+            saver(like, params['liketype'], comment=comment_id)
+            return Response(dl(Like, comment_id))
 
-            return Response(saver(like, params['liketype']))
 
 class Comments(GenericAPIView):
-    def get(self,requests, pk, *args, **kwargs):
-
+    def get(self, requests, pk, *args, **kwargs):
         if not pk:
             return Response({
                 "Error": "pk kiritilmagan"
             })
 
         comments = Comment.objects.filter(product_id=pk)
-        # if not comments:
-        #     return Response({
-        #         "Error": "bu pk da comment yo'q"
-        #     })
 
         result = [comment_format(x) for x in comments]
         return Response({

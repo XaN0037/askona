@@ -35,8 +35,28 @@ class AuthView(GenericAPIView):
             })
 
         if method == "regis":
+            if 'otp' not in params:
+                return Response({
+                    "error": "otp token kerak"
+                })
+            otp = OTP.objcets.filter(key=params['otp']).first()
+            if not otp:
+                return Response({
+                    "Error": f"Xato Token"
+                })
+            if otp.state != "confirmed":
+                return Response({
+                    "Error": f"Bu token yaroqsz"
+                })
             mobile = params.get("mobile")
+
+            if otp.mobile != mobile:
+                return Response({
+                    "Error": f"Bu boshqa telefon raqami"
+                })
+
             email = params.get("email")
+
             user = User.objects.filter(mobile=mobile).first()
             email = User.objects.filter(email=email).first()
             if user:
@@ -100,23 +120,22 @@ class AuthView(GenericAPIView):
                         'Error': "Bunday mobile allaqachon ro'yxatdan  o'tgan"
                     }, status=status.HTTP_400_BAD_REQUEST
                 )
-            
+
             code = random.randint(10000, 99999)
             key = generate_key(50) + "$" + str(code) + "$" + uuid.uuid1().__str__()
             otp = code_decoder(key)
             sms = sms_sender(params['mobile'], code)
             """email"""
-            send_mail(subject='ZAYBAL',
-                      message=f'karochi auth email ishladi kod: {code}, puli qani',
-                      from_email=settings.EMAIL_HOST_USER,
-                      recipient_list=[f'{params["email"]}'])
+            # send_mail(subject='ZAYBAL',
+            #           message=f'karochi auth email ishladi kod: {code}, puli qani',
+            #           from_email=settings.EMAIL_HOST_USER,
+            #           recipient_list=[f'{params["email"]}'])
 
             if sms.get('status') != "waiting":
                 return Response({
                     "error": "sms xizmatida qandaydir muommo",
                     "data": sms
                 })
-
 
             root = OTP()
             root.mobile = params['mobile']
